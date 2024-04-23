@@ -9,8 +9,14 @@ class News extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title', 'article', 'user_id'
+    ];
+
     public function user()
     {
-        return $this->hasOne(User::class, 'user_id', 'id');
+//        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->hasMany(User::class, 'id', 'user_id');
+//        return $this->belongsTo(User::class, 'user_id', 'id', 'news_users');
     }
 }
