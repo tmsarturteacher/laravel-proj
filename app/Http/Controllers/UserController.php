@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\News;
+use App\Http\Requests\UsersRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -15,21 +14,7 @@ class UserController extends Controller
     public function index()
     {
         // Eloquent Builder - ORM
-//        $users = User::all();
-//        $users = User::where('id', '>', 1)->orderBy('id')->get();
-//        $users = User::paginate(1);
-//        $users = User::first();
-        $users = User::firstWhere('id', '>', 1);
-
-//        $news = News::first();
-//        dd($news->user()->get());
-
-
-        // Query Builder
-//        DB::table('users')
-//            ->select('*')
-//            ->where('id', '>', 1)
-//            ->get();
+        $users = User::paginate(10);
 
         $countUsers = User::where('id', '>', 1)->count();
 
@@ -44,15 +29,22 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('users.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UsersRequest $request)
     {
-//        User::create([])->save();
+//        dd($request->validated());
+        $user = User::create($request->all());
+
+        if (!$user->save()) {
+            redirect()->back()->withErrors('error', 'Error!');
+        }
+
+        return redirect()->route('user.index')->with('success', 'User ' . $user->name . ' has been added!');
     }
 
     /**
@@ -86,14 +78,18 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $user->update([
-            'name' => $request->get('name')
-        ]);
+        $editInfo = [
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+        ];
 
+        if ($user->password != $request->get('password')) {
+            $editInfo['password'] = $request->get('password');
+        }
 
-//        $user->update($request->all());
+        $user->update($editInfo);
 
-        return redirect(route('user.show', $user->id));
+        return redirect(route('user.show', $user->id))->with('success', 'User has been updated!');
     }
 
     /**
@@ -101,6 +97,16 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('user.index')->with('success', 'User ' . $user['name'] . ' has been delete!');
+    }
+
+    public function list()
+    {
+        $user = User::all();
+
+        return response()->json($user);
     }
 }

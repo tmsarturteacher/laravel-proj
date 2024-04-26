@@ -1,16 +1,49 @@
-<div>
-    Users list
+@extends('layout')
 
-    <ul>
-    @isset($users)
-        @foreach($users as $user)
-            <li>[id: {{ $user->id }}] <a href="{{ route('user.show', $user->id) }}">{{ $user->name }}</a>
-                [{{ $user->user()->name }}]
-                [<a href="{{ route('user.edit', $user->id) }}">Edit</a> ]</li>
-        @endforeach
+@section('content')
 
-        {{ $users->links() }}
+    @if(session('success'))
+        <div class="alert alert-success" role="alert">
+            {{ session()->get('success') }}
+        </div>
+    @endif
 
-    @endisset
-    </ul>
-</div>
+    <h2>Users</h2>
+    <a href="{{ route('user.create') }}">
+        <button type="button" class="btn btn-primary">Create user</button>
+    </a>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        @isset($users)
+            @foreach($users as $user)
+                <tr>
+                    <th>{{ $user->id }}</th>
+                    <th><a href="{{ route('user.show', $user->id) }}">{{ $user->name }}</a></th>
+                    <th><a href="{{ route('user.edit', $user->id) }}">
+                            <button type="button" class="btn btn-warning">Edit</button>
+                        </a>
+                        <form method="post" action="{{ route('user.destroy', $user->id) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+
+                    </th>
+                </tr>
+            @endforeach
+
+            {{ $users->links() }}
+
+        @endisset
+
+        </tbody>
+    </table>
+@endsection
