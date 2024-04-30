@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CustomMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,7 +13,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'custom' => CustomMiddleware::class
+        ]);
+//        $middleware->priority([
+//
+//        ]);
+        $middleware->use([
+            CustomMiddleware::class
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

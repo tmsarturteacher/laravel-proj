@@ -14,7 +14,14 @@ class UserController extends Controller
     public function index()
     {
         // Eloquent Builder - ORM
-        $users = User::paginate(10);
+//        $users = User::paginate(10);
+        $users = User::with('news', function ($query) {
+            $query->orderBy('id');
+        })->get();
+
+//        if (smth) {
+//            $users->load('news');
+//        }
 
         $countUsers = User::where('id', '>', 1)->count();
 
@@ -50,13 +57,11 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        $user = User::find($id);
+//        $user = User::find($id);
 
-        return view('users.show', [
-            'user' => $user
-        ]);
+        return view('users.show', compact('user'));
     }
 
     /**
