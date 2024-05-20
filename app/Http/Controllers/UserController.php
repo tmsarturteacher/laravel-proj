@@ -2,9 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserEvent;
 use App\Http\Requests\UsersRequest;
+use App\Jobs\EmailSenderJob;
+use App\Mail\RegistrationMail;
 use App\Models\User;
+use App\Observers\UserObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -14,10 +22,17 @@ class UserController extends Controller
     public function index()
     {
         // Eloquent Builder - ORM
-//        $users = User::paginate(10);
-        $users = User::with('news', function ($query) {
-            $query->orderBy('id');
-        })->get();
+        $users = User::paginate(10);
+
+        foreach ($users as $user) {
+            if ($user->id == 1) {
+                $user->name = "Test";
+            }
+//            dd($user->name);
+        }
+//        $users = User::with('news', function ($query) {
+//            $query->orderBy('id');
+//        })->get();
 
 //        if (smth) {
 //            $users->load('news');
@@ -36,20 +51,26 @@ class UserController extends Controller
      */
     public function create()
     {
+
         return view('users.create');
     }
 
     /**
      * Store a newly created resource in storage.
+     * @param UsersRequest $request
+     * @return RedirectResponse
      */
-    public function store(UsersRequest $request)
+    public function store(UsersRequest $request): RedirectResponse
     {
-//        dd($request->validated());
-        $user = User::create($request->all());
+        $validated = $request->validated();
+        $user = User::create($validated);
 
         if (!$user->save()) {
             redirect()->back()->withErrors('error', 'Error!');
         }
+
+        //
+//        EmailSenderJob::dispatch($validated);
 
         return redirect()->route('user.index')->with('success', 'User ' . $user->name . ' has been added!');
     }

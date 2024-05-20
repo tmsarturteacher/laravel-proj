@@ -1,5 +1,7 @@
 @extends('layout')
 
+{{--@include('partials.header', ["title" => "test"])--}}
+
 @section('content')
 
     @if(session('success'))
@@ -40,7 +42,7 @@
                 </tr>
             @endforeach
 
-            {{ $users->links() }}
+{{--            {{ $users->links() }}--}}
 
         @endisset
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\JobsController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ResourseController;
 use App\Http\Controllers\UserController;
@@ -46,6 +47,7 @@ Route::resource('admin/user', UserController::class)
     ->middleware('custom');
 Route::resource('news', NewsController::class);
 Route::get('/test', [HomeController::class, 'testCreate'])->name('ytrty');
+Route::get('/jobs', [JobsController::class, 'index'])->name('jobs.index');
 
 //Route::post('/create', [ResourseController::class, 'create']);
 //Route::post('/edit/{id}', [ResourseController::class, 'edit']);

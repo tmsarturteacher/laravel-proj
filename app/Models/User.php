@@ -3,10 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Observers\UserObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+#[ObservedBy([UserObserver::class])]
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -50,4 +54,12 @@ class User extends Authenticatable
 //        return $this->hasOne(News::class, 'user_id', 'id');
         return $this->hasMany(News::class, 'user_id', 'id');
     }
+
+//    public function name(): Attribute
+//    {
+//        return Attribute::make(
+//            get: fn (string $value) => ucfirst($value),
+//            set: fn (string $value) => strtolower($value)
+//        );
+//    }
 }
