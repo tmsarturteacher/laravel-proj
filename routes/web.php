@@ -46,7 +46,7 @@ Route::resource('index', ResourseController::class);
 Route::resource('admin/user', UserController::class)
     ->middleware('custom');
 Route::resource('news', NewsController::class);
-Route::get('/test', [HomeController::class, 'testCreate'])->name('ytrty');
+Route::get('/filesystem', [HomeController::class, 'filesystem'])->name('ytrty');
 Route::get('/jobs', [JobsController::class, 'index'])->name('jobs.index');
 
 //Route::post('/create', [ResourseController::class, 'create']);
