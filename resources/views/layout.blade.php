@@ -11,8 +11,8 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet"/>
 
     <!-- Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+{{--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"--}}
+{{--          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">--}}
 </head>
 <body>
 
@@ -22,15 +22,29 @@
         <div class="row">
             <div class="col-4">
                 <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.index') }}">Users</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('news.index') }}">News</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('jobs.index') }}">Jobs</a>
-                    </li>
+
+                    @if(auth()->check())
+
+                        <li>Hi, {{ auth()->user()->name }}!</li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('user.index') }}">Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('news.index') }}">News</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('jobs.index') }}">Jobs</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('auth.logout') }}">logout</a>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">Auth</a>
+                        </li>
+                    @endif
                 </ul>
             </div>
             <div class="col-8">
